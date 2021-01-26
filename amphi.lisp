@@ -5,25 +5,18 @@
 (defvar *lang-sides* '(:SOURCE :TARGET))
 
 (defun get-bi-text (tu)
-  (-<> tu
-    (assoc :BI-TEXT <>)
-    (cdr <>)))
+  (assoc-value tu :BI-TEXT))
 
 (defun get-text-from-tu (tu lang-side)
   (-<> tu
     (get-bi-text <>)
-    (assoc lang-side <>)
-    (cdr <>)))
+    (assoc-value <> lang-side)))
 
 (defun get-word-id (rtok)
-  (-<> rtok
-    (assoc :WORD-ID <>)
-    (cdr <>)))
+  (assoc-value rtok :WORD-ID))
 
 (defun get-rtoks (bi-rtoks lang-side)
-  (-<> bi-rtoks
-    (assoc lang-side <>)
-    (cdr <>)))
+  (assoc-value bi-rtoks lang-side))
 
 (defun update-word-id* (bi-rtoks lang-side)
   (-<> bi-rtoks
@@ -31,44 +24,28 @@
     (update-word-id <>)))
 
 (defun get-bi-rtoks (tu)
-  (-<> tu
-    (assoc :BI-RTOKS <>)
-    (cdr <>)))
+  (assoc-value tu :BI-RTOKS))
 
 (defun get-tree (tu)
-  (-<> tu
-    (assoc :TREE <>)
-    (cdr <>)))
+  (assoc-value tu :TREE))
 
 (defun get-bi-snode (node)
-  (-<> node
-    (assoc :BI-SNODE <>)
-    (cdr <>)))
+  (assoc-value node :BI-SNODE))
 
 (defun get-snode (bi-snode lang-side)
-  (-<> bi-snode
-    (assoc lang-side <>)
-    (cdr <>)))
+  (assoc-value bi-snode lang-side))
 
 (defun get-s (r)
-  (-<> r
-    (assoc :S <>)
-    (cdr <>)))
+  (assoc-value r :S))
 
 (defun get-e (r)
-  (-<> r
-    (assoc :E <>)
-    (cdr <>)))
+  (assoc-value r :E))
 
 (defun get-text (r)
-  (-<> r
-    (assoc :TEXT <>)
-    (cdr <>)))
+  (assoc-value r :TEXT))
 
 (defun get-children (node)
-  (-<> node
-    (assoc :CHILDREN <>)
-    (cdr <>)))
+  (assoc-value node :CHILDREN))
 
 (defun match-rtok (rtok snode)
   (loop for r in snode

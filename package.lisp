@@ -1,7 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:amphi
-  (:use #:cl #:arrow-macros #:jonathan #:cl-ppcre)
+  (:use #:cl #:arrow-macros #:jonathan #:cl-ppcre #:alexandria)
   (:export #:*lang-sides*
 	   #:get-bi-text
 	   #:get-text-from-tu
