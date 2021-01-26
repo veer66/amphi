@@ -1,9 +1,9 @@
 # amphi
-### _Your Name <your.name@example.com>_
+### _Vee Satayamas <5ssgdxltv@relay.firefox.com>_
 
-This is a project to do ... something.
+A library for manipulating Amphigram
 
 ## License
 
-Specify license here
+GPL-3.0
 
