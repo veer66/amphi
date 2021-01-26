@@ -3,6 +3,8 @@
 (defpackage #:amphi
   (:use #:cl #:arrow-macros #:jonathan #:cl-ppcre)
   (:export #:*lang-sides*
+	   #:get-bi-text
+	   #:get-text-from-tu
 	   #:get-word-id
 	   #:get-rtoks
 	   #:get-bi-rtoks

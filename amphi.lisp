@@ -4,6 +4,17 @@
 
 (defvar *lang-sides* '(:SOURCE :TARGET))
 
+(defun get-bi-text (tu)
+  (-<> tu
+    (assoc :BI-TEXT <>)
+    (cdr <>)))
+
+(defun get-text-from-tu (tu lang-side)
+  (-<> tu
+    (get-bi-text <>)
+    (assoc lang-side <>)
+    (cdr <>)))
+
 (defun get-word-id (rtok)
   (-<> rtok
     (assoc :WORD-ID <>)
