@@ -69,3 +69,8 @@
   (jonathan:parse line :as :alist
 		       :keyword-normalizer #'to-keyword
 		       :normalize-all t))
+
+(defun another-lang-dir (lang-dir)
+  (ecase lang-dir
+    (:SOURCE :TARGET)
+    (:TARGET :SOURCE)))
