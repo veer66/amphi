@@ -17,4 +17,5 @@
 	   #:get-children
 	   #:select-rtoks
 	   #:to-keyword
-	   #:parse-tu))
+	   #:parse-tu
+	   #:another-lang-dir))
