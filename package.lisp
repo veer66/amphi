@@ -18,4 +18,6 @@
 	   #:select-rtoks
 	   #:to-keyword
 	   #:parse-tu
-	   #:another-lang-dir))
+	   #:another-lang-dir
+	   #:diff-range
+	   #:diff-snode))

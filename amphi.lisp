@@ -74,3 +74,9 @@
   (ecase lang-dir
     (:SOURCE :TARGET)
     (:TARGET :SOURCE)))
+
+(defun diff-range (r1 r2)
+  '())
+
+(defun diff-snode (snode1 snode2)
+  )
