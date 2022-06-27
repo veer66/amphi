@@ -6,7 +6,7 @@
   :license "GPL-3.0"
   :version "0.0.1"
   :serial t
-  :depends-on (#:arrow-macros #:cl-ppcre #:jonathan #:alexandria)
+  :depends-on (#:arrow-macros #:cl-ppcre #:jonathan #:alexandria #:babel)
   :components ((:file "package")
 	       (:file "amphi"))
   :in-order-to ((test-op (test-op :amphi/test))))
