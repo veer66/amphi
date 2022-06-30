@@ -120,18 +120,19 @@
 	(e2 (cdr (assoc :e r2))))
     (cond
       ((non-overlap-ranges? r1 r2) r1)
-      ((and (>= s1 s2) (<= e1 e2)) nil)
-      ((<= s1 s2) (crop-range r1 s1 s2))
+      ((and (<= s2 s1) (>= e2 e1)) nil)
+      ((< s1 s2) (crop-range r1 s1 s2))
+      ((eq s1 s2) (crop-range r1 e2 e1))
       ((> s1 s2) (crop-range r1 e2 e1))
       (t nil))))
 
 (defun diff-snode (snode1 snode2)
-  (let ((snode1* nil)
+  (let ((snode1* '())
 	(snode1** snode1))
     (loop do (loop for r1 in snode1
 		   do (let ((r1* r1))
 			(loop for r2 in snode2
-			      do (setq r1* (diff-range r1 r2)))
+			      do (setq r1* (diff-range r1* r2)))
 			(when r1*
 			  (setq snode1* (cons r1* snode1*)))))
 	  do (return snode1*))))

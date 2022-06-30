@@ -54,6 +54,12 @@
 			 '((:text . "XA") (:S . 29) (:E . 31)))
 	     '((:text . "BCD") (:S . 31) (:E . 34)))))
 
+(test diff-crop-head-by-one-match
+  (is (equal (diff-range '((:text . "ABCD") (:S . 30) (:E . 34))
+			 '((:text . "A") (:S . 30) (:E . 31)))
+	     '((:text . "BCD") (:S . 31) (:E . 34)))))
+
+
 (test diff-crop-tail
   (is (equal (diff-range '((:text . "ABCD") (:S . 30) (:E . 34))
 			 '((:text . "DY") (:S . 33) (:E . 35)))
@@ -68,6 +74,18 @@
   (is (equal (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
 			 '(((:text . "ABCD") (:S . 30) (:E . 34))))
 	     '())))
+
+(test diff-snode-with-partial-match
+  (is (equal (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
+			 '(((:text . "D") (:S . 33) (:E . 34))))
+	     '(((:text . "ABC") (:S . 30) (:E . 33))))))
+
+
+(test diff-snode-with-two-partial-matches
+  (is (equal (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
+			 '(((:text . "A") (:S . 30) (:E . 31))
+			   ((:text . "D") (:S . 33) (:E . 34))))
+	     '(((:text . "BC") (:S . 31) (:E . 33))))))
 
 (run! 'range-suite)
 (run! 'diff-suite)
