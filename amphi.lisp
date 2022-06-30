@@ -132,9 +132,8 @@
 		   do (let ((r1* r1))
 			(loop for r2 in snode2
 			      do (setq r1* (diff-range r1 r2)))
-			(setq snode1* (cons r1* snode1*))))
+			(when r1*
+			  (setq snode1* (cons r1* snode1*)))))
 	  do (return snode1*))))
 
 
-;; (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
-;; 	    '())

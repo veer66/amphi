@@ -59,6 +59,16 @@
 			 '((:text . "DY") (:S . 33) (:E . 35)))
 	     '((:text . "ABC") (:S . 30) (:E . 33)))))
 
+(test diff-snode-with-empty-snode
+  (is (equal (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
+			 '())
+	     '(((:text . "ABCD") (:S . 30) (:E . 34))))))
+
+(test diff-snode-with-identical-one
+  (is (equal (diff-snode '(((:text . "ABCD") (:S . 30) (:E . 34)))
+			 '(((:text . "ABCD") (:S . 30) (:E . 34))))
+	     '())))
+
 (run! 'range-suite)
 (run! 'diff-suite)
 
