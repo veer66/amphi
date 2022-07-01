@@ -146,5 +146,3 @@
   (if snode2
       (diff-snode-when-snode2-is-not-null snode1 snode2)
       snode1))
-
-
