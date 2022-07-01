@@ -128,19 +128,19 @@
       ((> s1 s2) (list (crop-range r1 e2 e1)))
       (t '()))))
 
+(defun diff-snode-by-range (snode r)
+  (loop for r1* in snode
+	nconc (diff-range r1* r)))
+
+(defun diff-range-by-snode (r snode)
+  (reduce #'diff-snode-by-range
+	  snode
+	  :initial-value (list r)))
+
 (defun diff-snode-when-snode2-is-not-null (snode1 snode2)
-  (let ((snode1* '()))
-    (loop for r1 in snode1
-	  do (let ((r1s (list r1)))
-	       (loop for r2 in snode2
-		     do (let ((r1s* '()))
-			  (loop for r1* in r1s
-				do (let ((r3s (diff-range r1* r2)))
-				     (loop for r in r3s
-					   do (setq r1s* (cons r r1s*)))))
-			  (setq r1s r1s*)))
-	       (setq snode1* (nconc snode1* r1s))))
-    (sort snode1* #'< :key #'(lambda (r) (cdr (assoc :s r))))))
+  (sort (loop for r1 in snode1
+	      nconc (diff-range-by-snode r1 snode2))
+	#'< :key #'(lambda (r) (cdr (assoc :s r)))))
 
 (defun diff-snode (snode1 snode2)
   (if snode2
