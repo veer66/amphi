@@ -20,4 +20,5 @@
 	   #:parse-tu
 	   #:another-lang-dir
 	   #:diff-range
-	   #:diff-snode))
+	   #:diff-snode
+	   #:sort-snode))

@@ -146,3 +146,8 @@
   (if snode2
       (diff-snode-when-snode2-is-not-null snode1 snode2)
       snode1))
+
+(defun sort-snode (snode attr)
+  (flet ((key-fn (r)
+	   (cdr (assoc attr r))))
+    (sort snode #'< :key #'key-fn)))
