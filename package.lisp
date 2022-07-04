@@ -21,4 +21,5 @@
 	   #:another-lang-dir
 	   #:diff-range
 	   #:diff-snode
-	   #:sort-snode))
+	   #:sort-snode
+	   #:snode-in-snode?))

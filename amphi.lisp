@@ -151,3 +151,6 @@
   (flet ((key-fn (r)
 	   (cdr (assoc attr r))))
     (sort snode #'< :key #'key-fn)))
+
+(defun snode-in-snode? (snode1 snode2)
+  (null (diff-snode snode1 snode2)))
