@@ -147,6 +147,9 @@
       (diff-snode-when-snode2-is-not-null snode1 snode2)
       snode1))
 
+(defun fully-cover? (snode1 snode2)
+  (null (diff-snode snode2 snode1)))
+
 (defun sort-snode (snode attr)
   (flet ((key-fn (r)
 	   (cdr (assoc attr r))))

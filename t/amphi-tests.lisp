@@ -119,9 +119,23 @@
 	       ((:text . "G") (:S . 36) (:E . 37))))))
 
 
+(def-suite cover-suite :description "cover test suite")
+(in-suite cover-suite)
+
+(test basic-fully-cover-test
+  (is (fully-cover? '(((:text . "ABCD") (:S . 30) (:E . 34)))
+		    '(((:text . "A") (:S . 30) (:E . 31))
+		      ((:text . "C") (:S . 32) (:E . 33))))))
+
+(test basic-neg-fully-cover-test
+  (is (not (fully-cover? '(((:text . "A") (:S . 30) (:E . 31))
+			   ((:text . "C") (:S . 32) (:E . 33)))
+			 '(((:text . "ABCD") (:S . 30) (:E . 34)))))))
+
 (run! 'range-suite)
 (run! 'diff-range-suite)
 (run! 'diff-snode-suite)
+(run! 'cover-suite)
 
 
 

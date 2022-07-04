@@ -22,4 +22,5 @@
 	   #:diff-range
 	   #:diff-snode
 	   #:sort-snode
-	   #:snode-in-snode?))
+	   #:snode-in-snode?
+	   #:fully-cover?))
