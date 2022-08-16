@@ -23,4 +23,5 @@
 	   #:diff-snode
 	   #:sort-snode
 	   #:snode-in-snode?
-	   #:fully-cover?))
+	   #:fully-cover?
+	   #:text-range-eq?))

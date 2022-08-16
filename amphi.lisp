@@ -59,6 +59,10 @@
 (defun get-children (node)
   (assoc-value node :CHILDREN))
 
+(defun text-range-eq? (r0 r1)
+  (and (eq (get-s r0) (get-s r1))
+       (eq (get-e r0) (get-e r1))))
+
 (defun match-rtok (rtok snode)
   (loop for r in snode
 	  thereis (and (<= (get-s r) (get-s rtok))
