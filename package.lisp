@@ -1,7 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:amphi
-  (:use #:cl #:arrow-macros #:jonathan #:cl-ppcre #:alexandria #:babel)
+  (:use #:cl #:arrow-macros #:jonathan #:cl-ppcre #:alexandria #:babel #:f-underscore)
   (:export #:*lang-sides*
 	   #:get-bi-text
 	   #:get-text-from-tu
@@ -24,4 +24,5 @@
 	   #:sort-snode
 	   #:snode-in-snode?
 	   #:fully-cover?
-	   #:text-range-eq?))
+	   #:text-range-eq?
+	   #:sort-snodes-in-tu))

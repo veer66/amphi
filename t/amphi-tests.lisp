@@ -132,10 +132,20 @@
 			   ((:text . "C") (:S . 32) (:E . 33)))
 			 '(((:text . "ABCD") (:S . 30) (:E . 34)))))))
 
+
+(def-suite sort-suite :description "sort test suite")
+(in-suite sort-suite)
+
+(load #P"t/tu1.lisp")
+
+(test basic-sort-snodes-in-tu
+  (is (equal (sort-snodes-in-tu *tu1* :S) 1)))
+
 (run! 'range-suite)
 (run! 'diff-range-suite)
 (run! 'diff-snode-suite)
 (run! 'cover-suite)
+(run! 'sort-suite)
 
-
-
+;; (with-open-file (fi #P"~/Downloads/tu2.json")
+;;   (amphi::parse-tu (read-line fi)))

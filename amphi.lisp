@@ -30,11 +30,6 @@
 (defun get-rtoks (bi-rtoks lang-side)
   (assoc-value bi-rtoks lang-side))
 
-(defun update-word-id* (bi-rtoks lang-side)
-  (-<> bi-rtoks
-    (get-rtoks <> lang-side)
-    (update-word-id <>)))
-
 (defun get-bi-rtoks (tu)
   (assoc-value tu :BI-RTOKS))
 
@@ -159,5 +154,43 @@
 	   (cdr (assoc attr r))))
     (sort snode #'< :key #'key-fn)))
 
+(defmacro update-alist-values ((val alist) &rest cases)
+  (let ((key (gensym "UPDATE-ALIST-"))
+	(extended-cases (append cases `((otherwise ,val)))))
+    `(mapcar (f_ (let ((,key (car _))
+		       (,val (cdr _)))
+		   (cons ,key (case ,key
+				,@extended-cases))))
+	     ,alist)))
+
+(defun update-every-sub-tree (node update-fn &rest rest)
+  (let ((updated-children (loop for child in (cdr (assoc :children node))
+				collect (apply #'update-every-sub-tree
+					       (append (list child update-fn)
+						       rest))))
+	(updated-node (apply update-fn (cons node rest))))
+    (update-alist-values (v updated-node)
+       (:CHILDREN updated-children))))
+
+(defun sort-snodes-in-bi-rtoks (bi-rtoks attr)
+  (update-alist-values (v bi-rtoks)
+     (:SOURCE #1=(sort-snode v attr))
+     (:TARGET #1#)))
+
+(defun sort-snodes-in-bi-snode (bi-snode attr)
+  (update-alist-values (v bi-snode)
+     (:SOURCE #1=(sort-snode v attr))
+     (:TARGET #1#)))
+
+(defun sort-snodes-in-node (node attr)
+  (update-alist-values (v node)
+     (:BI-SNODE (sort-snodes-in-bi-snode v attr))))
+
+(defun sort-snodes-in-tu (tu attr)
+  (update-alist-values (v tu)
+     (:TREE (update-every-sub-tree v #'sort-snodes-in-node attr))
+     (:BI-RTOKS (sort-snodes-in-bi-rtoks v attr))))
+
+
 (defun snode-in-snode? (snode1 snode2)
-  (null (diff-snode snode1 snode2)))
+    (null (diff-snode snode1 snode2)))
