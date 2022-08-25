@@ -101,16 +101,19 @@
 
 ;; (crop-text "ABCD" 10 14 11 13)
 
+;; 57 58
+;; (crop-range '((:S . 57) (:E . 69) (:TEXT . "👎the reason")) 57 58)
+
 (defun crop-range (r s* e*)
   (let ((s (cdr (assoc :s r)))
 	(e (cdr (assoc :e r))))
     (loop for (key . val) in r
 	  collect
-	  (cond
-	    ((eq key :s) (cons :s s*))
-	    ((eq key :e) (cons :e e*))
-	    ((eq key :text) (cons :text (crop-text val s e s* e*)))
-	    (t (cons key val))))))
+	  (case key
+		(:s (cons :s s*))
+		(:e (cons :e e*))
+		(:text (cons :text (crop-text val s e s* e*)))
+		(otherwise (cons key val))))))
 
 (defun diff-range (r1 r2)
   (let ((s1 (cdr (assoc :s r1)))
