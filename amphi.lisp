@@ -155,7 +155,7 @@
 (defun sort-snode (snode attr)
   (flet ((key-fn (r)
 	   (cdr (assoc attr r))))
-    (sort snode #'< :key #'key-fn)))
+    (sort (copy-list snode) #'< :key #'key-fn)))
 
 (defmacro update-alist-values ((val alist) &rest cases)
   (let ((key (gensym "UPDATE-ALIST-"))
