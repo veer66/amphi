@@ -6,9 +6,9 @@
 
 (defun utf16-substr (str s e)
   (-<> str
-       (string-to-octets <> :encoding :UTF-16BE)
-       (subseq <> (* s 2) (* e 2))
-       (octets-to-string <> :encoding :UTF-16BE)))
+    (string-to-octets <> :encoding :UTF-16BE)
+    (subseq <> (* s 2) (* e 2))
+    (octets-to-string <> :encoding :UTF-16BE)))
 
 (defun utf16-len (str)
   (/ (length (string-to-octets str :encoding :UTF-16BE))
@@ -60,15 +60,15 @@
 
 (defun match-rtok (rtok snode)
   (loop for r in snode
-	  thereis (and (<= (get-s r) (get-s rtok))
-		       (>= (get-e r) (get-e rtok)))))
+        thereis (and (<= (get-s r) (get-s rtok))
+                     (>= (get-e r) (get-e rtok)))))
 
 ;; (match-rtok '(("s" . 10) ("e" . 20)) '((("s" . 1) ("e" . 100))))
 
 (defun select-rtoks (rtoks snode)
   (loop for rtok in rtoks
-	if (match-rtok rtok snode)
-	  collect rtok))
+        if (match-rtok rtok snode)
+          collect rtok))
 
 (defun to-keyword (w)
   (-<> w
@@ -78,8 +78,8 @@
 
 (defun parse-tu (line)
   (jonathan:parse line :as :alist
-		       :keyword-normalizer #'to-keyword
-		       :normalize-all t))
+                       :keyword-normalizer #'to-keyword
+                       :normalize-all t))
 
 (defun another-lang-dir (lang-dir)
   (ecase lang-dir
@@ -88,15 +88,15 @@
 
 (defun non-overlap-ranges? (r1 r2)
   (let ((s1 (cdr (assoc :s r1)))
-	(e1 (cdr (assoc :e r1)))
-	(s2 (cdr (assoc :s r2)))
-	(e2 (cdr (assoc :e r2))))
+        (e1 (cdr (assoc :e r1)))
+        (s2 (cdr (assoc :s r2)))
+        (e2 (cdr (assoc :e r2))))
     (or (<= e2 s1)
-	(<= e1 s2))))
+        (<= e1 s2))))
 
 (defun crop-text (text s e s* e*)
   (let ((s-offset (- s* s))
-	(e-offset (- (- e s) (- e e*))))
+        (e-offset (- (- e s) (- e e*))))
     (utf16-substr text s-offset e-offset)))
 
 ;; (crop-text "ABCD" 10 14 11 13)
@@ -106,25 +106,25 @@
 
 (defun crop-range (r s* e*)
   (let ((s (cdr (assoc :s r)))
-	(e (cdr (assoc :e r))))
+        (e (cdr (assoc :e r))))
     (loop for (key . val) in r
-	  collect
-	  (case key
-		(:s (cons :s s*))
-		(:e (cons :e e*))
-		(:text (cons :text (crop-text val s e s* e*)))
-		(otherwise (cons key val))))))
+          collect
+          (case key
+            (:s (cons :s s*))
+            (:e (cons :e e*))
+            (:text (cons :text (crop-text val s e s* e*)))
+            (otherwise (cons key val))))))
 
 (defun diff-range (r1 r2)
   (let ((s1 (cdr (assoc :s r1)))
-	(e1 (cdr (assoc :e r1)))
-	(s2 (cdr (assoc :s r2)))
-	(e2 (cdr (assoc :e r2))))
+        (e1 (cdr (assoc :e r1)))
+        (s2 (cdr (assoc :s r2)))
+        (e2 (cdr (assoc :e r2))))
     (cond
       ((non-overlap-ranges? r1 r2) (list r1))
       ((and (<= s2 s1) (>= e2 e1)) '())
       ((and (> s2 s1) (< e2 e1)) (list (crop-range r1 s1 s2)
-				       (crop-range r1 e2 e1)))
+                                       (crop-range r1 e2 e1)))
       ((< s1 s2) (list (crop-range r1 s1 s2)))
       ((eq s1 s2) (list (crop-range r1 e2 e1)))
       ((> s1 s2) (list (crop-range r1 e2 e1)))
@@ -132,17 +132,17 @@
 
 (defun diff-snode-by-range (snode r)
   (loop for r1* in snode
-	nconc (diff-range r1* r)))
+        nconc (diff-range r1* r)))
 
 (defun diff-range-by-snode (r snode)
   (reduce #'diff-snode-by-range
-	  snode
-	  :initial-value (list r)))
+          snode
+          :initial-value (list r)))
 
 (defun diff-snode-when-snode2-is-not-null (snode1 snode2)
   (sort (loop for r1 in snode1
-	      nconc (diff-range-by-snode r1 snode2))
-	#'< :key #'(lambda (r) (cdr (assoc :s r)))))
+              nconc (diff-range-by-snode r1 snode2))
+        #'< :key #'(lambda (r) (cdr (assoc :s r)))))
 
 (defun diff-snode (snode1 snode2)
   (if snode2
@@ -154,46 +154,46 @@
 
 (defun sort-snode (snode attr)
   (flet ((key-fn (r)
-	   (cdr (assoc attr r))))
+           (cdr (assoc attr r))))
     (sort (copy-list snode) #'< :key #'key-fn)))
 
 (defmacro update-alist-values ((val alist) &rest cases)
   (let ((key (gensym "UPDATE-ALIST-"))
-	(extended-cases (append cases `((otherwise ,val)))))
+        (extended-cases (append cases `((otherwise ,val)))))
     `(mapcar (f_ (let ((,key (car _))
-		       (,val (cdr _)))
-		   (cons ,key (case ,key
-				,@extended-cases))))
-	     ,alist)))
+                       (,val (cdr _)))
+                   (cons ,key (case ,key
+                                ,@extended-cases))))
+             ,alist)))
 
 (defun update-every-sub-tree (node update-fn &rest rest)
   (let ((updated-children (loop for child in (cdr (assoc :children node))
-				collect (apply #'update-every-sub-tree
-					       (append (list child update-fn)
-						       rest))))
-	(updated-node (apply update-fn (cons node rest))))
+                                collect (apply #'update-every-sub-tree
+                                               (append (list child update-fn)
+                                                       rest))))
+        (updated-node (apply update-fn (cons node rest))))
     (update-alist-values (v updated-node)
-       (:CHILDREN updated-children))))
+                         (:CHILDREN updated-children))))
 
 (defun sort-snodes-in-bi-rtoks (bi-rtoks attr)
   (update-alist-values (v bi-rtoks)
-     (:SOURCE #1=(sort-snode v attr))
-     (:TARGET #1#)))
+                       (:SOURCE #1=(sort-snode v attr))
+                       (:TARGET #1#)))
 
 (defun sort-snodes-in-bi-snode (bi-snode attr)
   (update-alist-values (v bi-snode)
-     (:SOURCE #1=(sort-snode v attr))
-     (:TARGET #1#)))
+                       (:SOURCE #1=(sort-snode v attr))
+                       (:TARGET #1#)))
 
 (defun sort-snodes-in-node (node attr)
   (update-alist-values (v node)
-     (:BI-SNODE (sort-snodes-in-bi-snode v attr))))
+                       (:BI-SNODE (sort-snodes-in-bi-snode v attr))))
 
 (defun sort-snodes-in-tu (tu attr)
   (update-alist-values (v tu)
-     (:TREE (update-every-sub-tree v #'sort-snodes-in-node attr))
-     (:BI-RTOKS (sort-snodes-in-bi-rtoks v attr))))
+                       (:TREE (update-every-sub-tree v #'sort-snodes-in-node attr))
+                       (:BI-RTOKS (sort-snodes-in-bi-rtoks v attr))))
 
 
 (defun snode-in-snode? (snode1 snode2)
-    (null (diff-snode snode1 snode2)))
+  (null (diff-snode snode1 snode2)))
