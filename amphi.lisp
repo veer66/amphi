@@ -99,6 +99,38 @@
         (e-offset (- (- e s) (- e e*))))
     (utf16-substr text s-offset e-offset)))
 
+
+(defun remove-spaces-from-rtok (rtok)
+  (let ((s* (cdr (assoc :s rtok)))
+	(e* nil)
+	(text (cdr (assoc :text rtok)))
+	(ch-list '())
+	(state :FRONT))
+    (loop for ch across text
+	  until (eq state :END)
+	  do
+	  (case state
+	    (:FRONT (cond
+		      ((eq ch #\Space) (incf s*))
+		      (t (progn
+			   (push ch ch-list)
+			   (setq e* (+ s*
+				       (if (> (char-code ch) #xFFFF)
+					   2
+					   1)))
+			   (setq state :MID)))))
+	    (:MID (cond
+		    ((eq ch #\Space) (setq state :END))
+		    (t (progn
+			 (push ch ch-list)
+			 (setf e* (+ e*
+				     (if (> (char-code ch) #xFFFF)
+					 2
+					 1)))))))))
+    (list (cons :text (coerce (reverse ch-list) 'string))
+	  (cons :s s*)
+	  (cons :e e*))))
+
 ;; (crop-text "ABCD" 10 14 11 13)
 
 ;; 57 58

@@ -21,6 +21,7 @@
 	   #:another-lang-dir
 	   #:diff-range
 	   #:diff-snode
+	   #:remove-spaces-from-rtok
 	   #:sort-snode
 	   #:snode-in-snode?
 	   #:fully-cover?
