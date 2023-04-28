@@ -126,7 +126,10 @@
 			 (setf e* (+ e*
 				     (if (> (char-code ch) #xFFFF)
 					 2
-					 1)))))))))
+					 1))))))))
+	  finally
+	     (when (eq state :FRONT)
+	       (setq e* s*)))
     (list (cons :text (coerce (reverse ch-list) 'string))
 	  (cons :s s*)
 	  (cons :e e*))))
