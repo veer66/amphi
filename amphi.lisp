@@ -101,13 +101,15 @@
 
 
 (defun remove-spaces-from-rtok (rtok)
-  (let ((s* (cdr (assoc :s rtok)))
+  (let* ((s (cdr (assoc :s rtok)))
+	(s* s)
 	(e* nil)
+	(non-space-e nil)
 	(text (cdr (assoc :text rtok)))
 	(ch-list '())
 	(state :FRONT))
     (loop for ch across text
-	  until (eq state :END)
+	  ;;until (eq state :END)
 	  do
 	  (case state
 	    (:FRONT (cond
@@ -118,21 +120,26 @@
 				       (if (> (char-code ch) #xFFFF)
 					   2
 					   1)))
+			   (setq non-space-e e*)
 			   (setq state :MID)))))
 	    (:MID (cond
-		    ((eq ch #\Space) (setq state :END))
+		    ((eq ch #\Space) (progn (push ch ch-list)
+					    (incf e*)))
 		    (t (progn
 			 (push ch ch-list)
-			 (setf e* (+ e*
+			 (setq e* (+ e*
 				     (if (> (char-code ch) #xFFFF)
 					 2
-					 1))))))))
+					 1)))
+			 (setq non-space-e e*))))))
 	  finally
 	     (when (eq state :FRONT)
-	       (setq e* s*)))
-    (list (cons :text (coerce (reverse ch-list) 'string))
+	       (setq non-space-e s*)))
+    (list (cons :text (let* ((offset-s (- s* s))
+			     (offset-e (- non-space-e s)))
+			(utf16-substr text offset-s offset-e)))
 	  (cons :s s*)
-	  (cons :e e*))))
+	  (cons :e non-space-e))))
 
 ;; (crop-text "ABCD" 10 14 11 13)
 
