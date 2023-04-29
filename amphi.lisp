@@ -100,7 +100,7 @@
     (utf16-substr text s-offset e-offset)))
 
 
-(defun remove-spaces-from-rtok (rtok)
+(defun remove-spaces-from-rtok* (rtok)
   (let* ((s (cdr (assoc :s rtok)))
 	(s* s)
 	(e* nil)
@@ -135,11 +135,22 @@
 	  finally
 	     (when (eq state :FRONT)
 	       (setq non-space-e s*)))
-    (list (cons :text (let* ((offset-s (- s* s))
-			     (offset-e (- non-space-e s)))
-			(utf16-substr text offset-s offset-e)))
-	  (cons :s s*)
-	  (cons :e non-space-e))))
+    (append (list (cons :text (let* ((offset-s (- s* s))
+				     (offset-e (- non-space-e s)))
+				(utf16-substr text offset-s offset-e)))
+		  (cons :s s*)
+		  (cons :e non-space-e))
+	    (loop for elem in rtok
+		  unless (or (eq (car elem) :S)
+			     (eq (car elem) :E)
+			     (eq (car elem) :TEXT))
+		    collect elem))))
+
+(defun remove-spaces-from-rtok (rtok)
+  (let ((text (cdr (assoc :text rtok))))
+    (if (cl-ppcre:all-matches "^\\s*$" text)
+	rtok
+	(remove-spaces-from-rtok* rtok))))
 
 ;; (crop-text "ABCD" 10 14 11 13)
 
